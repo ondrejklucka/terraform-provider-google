@@ -317,6 +317,14 @@ func Provider() terraform.ResourceProvider {
 					"GOOGLE_MONITORING_CUSTOM_ENDPOINT",
 				}, MonitoringDefaultBasePath),
 			},
+			"os_login_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateCustomEndpoint,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"GOOGLE_OS_LOGIN_CUSTOM_ENDPOINT",
+				}, OSLoginDefaultBasePath),
+			},
 			"pubsub_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -488,6 +496,7 @@ func Provider() terraform.ResourceProvider {
 			"google_folder":                                   dataSourceGoogleFolder(),
 			"google_folder_organization_policy":               dataSourceGoogleFolderOrganizationPolicy(),
 			"google_monitoring_notification_channel":          dataSourceMonitoringNotificationChannel(),
+			"google_monitoring_app_engine_service":            dataSourceMonitoringServiceAppEngine(),
 			"google_monitoring_uptime_check_ips":              dataSourceGoogleMonitoringUptimeCheckIps(),
 			"google_netblock_ip_ranges":                       dataSourceGoogleNetblockIpRanges(),
 			"google_organization":                             dataSourceGoogleOrganization(),
@@ -521,9 +530,9 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
-// Generated resources: 110
+// Generated resources: 117
 // Generated IAM resources: 51
-// Total generated resources: 161
+// Total generated resources: 168
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -543,6 +552,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_app_engine_application_url_dispatch_rules":             resourceAppEngineApplicationUrlDispatchRules(),
 			"google_app_engine_service_split_traffic":                      resourceAppEngineServiceSplitTraffic(),
 			"google_bigquery_dataset":                                      resourceBigQueryDataset(),
+			"google_bigquery_dataset_access":                               resourceBigQueryDatasetAccess(),
 			"google_bigquery_data_transfer_config":                         resourceBigqueryDataTransferConfig(),
 			"google_bigtable_app_profile":                                  resourceBigtableAppProfile(),
 			"google_binary_authorization_attestor":                         resourceBinaryAuthorizationAttestor(),
@@ -587,6 +597,8 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_compute_network":                                       resourceComputeNetwork(),
 			"google_compute_network_endpoint":                              resourceComputeNetworkEndpoint(),
 			"google_compute_network_endpoint_group":                        resourceComputeNetworkEndpointGroup(),
+			"google_compute_global_network_endpoint":                       resourceComputeGlobalNetworkEndpoint(),
+			"google_compute_global_network_endpoint_group":                 resourceComputeGlobalNetworkEndpointGroup(),
 			"google_compute_node_group":                                    resourceComputeNodeGroup(),
 			"google_compute_network_peering_routes_config":                 resourceComputeNetworkPeeringRoutesConfig(),
 			"google_compute_node_template":                                 resourceComputeNodeTemplate(),
@@ -620,6 +632,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_datastore_index":                                       resourceDatastoreIndex(),
 			"google_deployment_manager_deployment":                         resourceDeploymentManagerDeployment(),
 			"google_dialogflow_agent":                                      resourceDialogflowAgent(),
+			"google_dialogflow_intent":                                     resourceDialogflowIntent(),
 			"google_dns_managed_zone":                                      resourceDNSManagedZone(),
 			"google_filestore_instance":                                    resourceFilestoreInstance(),
 			"google_firestore_index":                                       resourceFirestoreIndex(),
@@ -661,7 +674,10 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_monitoring_alert_policy":                               resourceMonitoringAlertPolicy(),
 			"google_monitoring_group":                                      resourceMonitoringGroup(),
 			"google_monitoring_notification_channel":                       resourceMonitoringNotificationChannel(),
+			"google_monitoring_custom_service":                             resourceMonitoringService(),
+			"google_monitoring_slo":                                        resourceMonitoringSlo(),
 			"google_monitoring_uptime_check_config":                        resourceMonitoringUptimeCheckConfig(),
+			"google_os_login_ssh_public_key":                               resourceOSLoginSSHPublicKey(),
 			"google_pubsub_topic":                                          resourcePubsubTopic(),
 			"google_pubsub_topic_iam_binding":                              ResourceIamBinding(PubsubTopicIamSchema, PubsubTopicIamUpdaterProducer, PubsubTopicIdParseFunc),
 			"google_pubsub_topic_iam_member":                               ResourceIamMember(PubsubTopicIamSchema, PubsubTopicIamUpdaterProducer, PubsubTopicIdParseFunc),
@@ -869,6 +885,7 @@ func providerConfigure(d *schema.ResourceData, p *schema.Provider, terraformVers
 	config.LoggingBasePath = d.Get("logging_custom_endpoint").(string)
 	config.MLEngineBasePath = d.Get("ml_engine_custom_endpoint").(string)
 	config.MonitoringBasePath = d.Get("monitoring_custom_endpoint").(string)
+	config.OSLoginBasePath = d.Get("os_login_custom_endpoint").(string)
 	config.PubsubBasePath = d.Get("pubsub_custom_endpoint").(string)
 	config.RedisBasePath = d.Get("redis_custom_endpoint").(string)
 	config.ResourceManagerBasePath = d.Get("resource_manager_custom_endpoint").(string)

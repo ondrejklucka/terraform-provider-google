@@ -1,4 +1,46 @@
-## 3.16.0 (Unreleased)
+## 3.18.0 (Unreleased)
+## 3.17.0 (April 13, 2020)
+
+FEATURES:
+* **New Resource:** `google_bigquery_dataset_access` ([#6035](https://github.com/terraform-providers/terraform-provider-google/pull/6035))
+* **New Resource:** `google_dialogflow_intent` ([#6061](https://github.com/terraform-providers/terraform-provider-google/pull/6061))
+* **New Resource:** `google_os_login_ssh_public_key` ([#6026](https://github.com/terraform-providers/terraform-provider-google/pull/6026))
+
+IMPROVEMENTS:
+* accesscontextmanager: added `spec` and `use_explicit_dry_run_spec` to `google_access_context_manager_service_perimeter` to test perimeter configurations in dry-run mode. ([#6071](https://github.com/terraform-providers/terraform-provider-google/pull/6071))
+* compute: Added update support for `google_compute_interconnect_attachment` `admin_enabled` ([#6046](https://github.com/terraform-providers/terraform-provider-google/pull/6046))
+* compute: Added field `log_config` to `google_compute_health_check` and `google_compute_region_health_check` to enable health check logging. ([#6058](https://github.com/terraform-providers/terraform-provider-google/pull/6058))
+* compute: Added more import formats for `google_compute_instance` ([#6023](https://github.com/terraform-providers/terraform-provider-google/pull/6023))
+* sourcerepo: allowed `google_sourcerepo_repo` `pubsub_configs.topic` to accept short topic names in addition to full references. ([#6069](https://github.com/terraform-providers/terraform-provider-google/pull/6069))
+
+BUG FIXES:
+* compute: Fixed diff on default value for `google_compute_interconnect_attachment` `admin_enabled` ([#6046](https://github.com/terraform-providers/terraform-provider-google/pull/6046))
+* compute: Fixed perma-diff on `google_compute_interconnect_attachment` `candidate_subnets` ([#6046](https://github.com/terraform-providers/terraform-provider-google/pull/6046))
+* compute: fixed bug where `google_compute_instance_from_template` instance defaults were overriding `scheduling` ([#6070](https://github.com/terraform-providers/terraform-provider-google/pull/6070))
+* iap: `project` can now be unset in `iap_web_iam_member` and will read from the default `project` ([#6060](https://github.com/terraform-providers/terraform-provider-google/pull/6060))
+* serviceusage: fixed issue where `google_project_services` attempted to read a project before enabling the API that allows that read ([#6062](https://github.com/terraform-providers/terraform-provider-google/pull/6062))
+* sql: fixed error that occurred on `google_sql_database_instance` when `settings.ip_configuration` was set but `ipv4_enabled` was not set to true and `private_network` was not configured, by defaulting `ipv4_enabled` to true. ([#6041](https://github.com/terraform-providers/terraform-provider-google/pull/6041))
+* storage: fixed an issue where `google_storage_bucket_iam_member` showed a diff for bucket self links ([#6019](https://github.com/terraform-providers/terraform-provider-google/pull/6019))
+* storage: fixed bug where deleting a `google_storage_bucket` that contained non-deletable objects would retry indefinitely ([#6044](https://github.com/terraform-providers/terraform-provider-google/pull/6044))
+
+## 3.16.0 (April 06, 2020)
+FEATURES:
+* **New Data Source:** `google_monitoring_uptime_check_ips` ([#6009](https://github.com/terraform-providers/terraform-provider-google/pull/6009))
+
+IMPROVEMENTS:
+* cloudfunctions: Added `ingress_settings` field to `google_cloudfunctions_function` ([#5981](https://github.com/terraform-providers/terraform-provider-google/pull/5981))
+* cloudfunctions: added support for `vpc_connector_egress_settings` to `google_cloudfunctions_function` ([#5984](https://github.com/terraform-providers/terraform-provider-google/pull/5984))
+* accesscontextmanager: added `status.vpc_accessible_services` to `google_access_context_manager_service_perimeter` to control which services are available from the perimeter's VPC networks to the restricted Google APIs IP address range. ([#6006](https://github.com/terraform-providers/terraform-provider-google/pull/6006))
+* cloudrun: added ability to autogenerate revision name ([#5987](https://github.com/terraform-providers/terraform-provider-google/pull/5987))
+* compute: added ability to resize `google_compute_reservation` ([#5999](https://github.com/terraform-providers/terraform-provider-google/pull/5999))
+* container: added `resource_usage_export_config` to `google_container_cluster`, previously only available in `google-beta` ([#5990](https://github.com/terraform-providers/terraform-provider-google/pull/5990))
+* dns: added ability to update `google_dns_managed_zone.dnssec_config` ([#6011](https://github.com/terraform-providers/terraform-provider-google/pull/6011))
+* pubsub: Added `dead_letter_policy` support to `google_pubsub_subscription` ([#6010](https://github.com/terraform-providers/terraform-provider-google/pull/6010))
+
+BUG FIXES:
+* compute: Fixed an issue where `port` could not be removed from health checks ([#5997](https://github.com/terraform-providers/terraform-provider-google/pull/5997))
+* storage: fixed an issue where `google_storage_bucket_iam_member` showed a diff for bucket self links ([#6019](https://github.com/terraform-providers/terraform-provider-google/pull/6019))
+
 ## 3.15.0 (March 30, 2020)
 
 FEATURES:
